@@ -1,0 +1,76 @@
+#import
+from datetime import timedelta
+from airflow import DAG
+from airflow.operators.bash_operator import BashOperator
+from airflow.utils.dates import days_ago
+
+#define dag argument
+default_args = {
+    'owner': 'Jennifer Park',
+    'start_date': days_ago(0),
+    'email': ['jenjpark@hotmail.com'],
+    'email_on_failure': True,
+    'email_on_retry': True,
+    'retries': 1,
+    'retry_delay': timedelta(minutes=5),
+}
+
+#define dag
+dag = DAG(
+    dag_id='ETL_toll_data',
+    default_args=default_args,
+    description='ETL toll data',
+    schedule_interval=timedelta(days=1),
+)
+
+#define task_1
+extract = BashOperator(
+    task_id='unzip_data',
+    bash_command='unzip /home/project/airflow/dags/finalassignment/tolldata.tgz',
+    bash_command='echo "unzip data"',
+    dag=dag,
+)
+
+#define task_2
+transform = BashOperator(
+    task_id='extract_data_from_csv',
+    bash_command='',
+    bash_command='echo "extract data in csv formats"',
+    dag=dag,
+)
+
+#define task_3
+load = BashOperator(
+    task_id='extract_data_from_tsv',
+    bash_command='',
+    bash_command='echo "extract data in tsv formats"',
+    dag=dag,
+)
+
+#define task_4
+load = BashOperator(
+    task_id='extract_data_from_fixed_width',
+    bash_command='',
+    bash_command='echo "extract fixed width data"',
+    dag=dag,
+)
+
+#define task_5
+load = BashOperator(
+    task_id='consolidate_data',
+    bash_command='',
+    bash_command='echo "consolidate data"',
+    dag=dag,
+)
+
+#define task_6
+load = BashOperator(
+    task_id='transform_data',
+    bash_command='',
+    bash_command='echo "load"',
+    dag=dag,
+)
+
+
+# task pipeline
+unzip_data >> extract_data_from_csv >> extract_data_from_tsv >> extract_data_from_fixed_width >> consolidate_data >> transform_data
