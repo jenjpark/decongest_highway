@@ -1,0 +1,48 @@
+#import
+from datetime import timedelta
+from airflow import DAG
+from airflow.operators.bash_operator import BashOperator
+from airflow.utils.dates import days_ago
+
+#define dag argument
+default_args = {
+    'owner': 'Jennifer Park',
+    'start_date': days_ago(0),
+    'email': ['jenjpark@hotmail.com'],
+    'email_on_failure': True,
+    'email_on_retry': True,
+    'retries': 1,
+    'retry_delay': timedelta(minutes=5),
+}
+
+#define dag
+dag = DAG(
+    dag_id='sample-etl-dag',
+    default_args=default_args,
+    description='Sample ETL DAG using Bash',
+    schedule_interval=timedelta(days=1),
+)
+
+#define task_1
+extract = BashOperator(
+    task_id='extract',
+    bash_command='echo "extract"',
+    dag=dag,
+)
+
+#define task_2
+transform = BashOperator(
+    task_id='transform',
+    bash_command='echo "transform"',
+    dag=dag,
+)
+
+#define task_3
+load = BashOperator(
+    task_id='load',
+    bash_command='echo "load"',
+    dag=dag,
+)
+
+# task pipeline
+extract >> transform >> load
