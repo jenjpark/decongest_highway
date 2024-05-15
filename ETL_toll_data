@@ -6,7 +6,7 @@ from airflow.utils.dates import days_ago
 
 #define dag argument
 default_args = {
-    'owner': 'Jennifer Park',
+    'owner': 'jen',
     'start_date': days_ago(0),
     'email': ['jenjpark@hotmail.com'],
     'email_on_failure': True,
